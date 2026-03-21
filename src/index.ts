@@ -1,4 +1,5 @@
 export { Editor } from "./react/Editor";
+export { DetailLexicalViewer } from "./react/DetailLexicalViewer";
 export { ReadOnlyLexicalRenderer } from "./react/ReadOnlyLexicalRenderer";
 export { ServerGeneratedLexicalHtml } from "./react/ServerGeneratedLexicalHtml";
 export { generateHtmlFromContent } from "./server/generateHtmlFromContent";

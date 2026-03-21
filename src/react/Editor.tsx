@@ -49,6 +49,7 @@ interface EditorProps {
   onChange?: (value: string) => void;
   outputFormat?: "markdown" | "json";
   className?: string;
+  style?: React.CSSProperties;
   namespace?: string;
   toolbar?: React.ReactNode;
   editablePlugins?: React.ReactNode;
@@ -73,6 +74,7 @@ function EditorComponent({
   onChange,
   outputFormat = "markdown",
   className,
+  style,
   namespace = "DinnLexicalEditor",
   toolbar,
   editablePlugins,
@@ -104,6 +106,7 @@ function EditorComponent({
             : "relative flex h-full w-full flex-col overflow-hidden rounded-lg border bg-background shadow-sm",
           className
         )}
+        style={style}
       >
         {!readOnly && toolbar}
         <div className={cn(readOnly ? readOnlyRenderFrameClassName : "relative min-h-0 flex-1")}>
