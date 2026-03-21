@@ -34,7 +34,12 @@ import NormalizeTableColumnWidthsPlugin from "./plugins/NormalizeTableColumnWidt
 
 function Placeholder() {
   return (
-    <div className="pointer-events-none absolute top-9 left-6 select-none overflow-hidden text-ellipsis whitespace-nowrap text-gray-400">
+    <div
+      className={cn(
+        theme.placeholder,
+        "pointer-events-none absolute top-[2.8rem] left-6 select-none overflow-hidden text-ellipsis whitespace-nowrap"
+      )}
+    >
       Enter some rich text...
     </div>
   );
