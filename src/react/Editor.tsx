@@ -117,8 +117,10 @@ function EditorComponent({
             <RichTextPlugin
               contentEditable={
                 !readOnly ? (
-                  <div className="px-6 py-9">
+                  <div className="px-6">
+                    <div aria-hidden="true" className="h-9" />
                     <ContentEditable className="relative z-10 min-h-full w-full text-left outline-none" />
+                    <div aria-hidden="true" className="h-9" />
                   </div>
                 ) : (
                   <ContentEditable
