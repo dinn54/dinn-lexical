@@ -13,7 +13,7 @@ import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPl
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
-import { LexicalEditor } from "lexical";
+import { $getRoot, LexicalEditor } from "lexical";
 import React, { memo, useEffect, useMemo } from "react";
 
 import { isLexicalEditorStateString } from "../core/contentFormat";
@@ -68,6 +68,30 @@ function EditorInitPlugin({ onInit }: { onInit: (editor: LexicalEditor) => void 
   }, [editor, onInit]);
 
   return null;
+}
+
+function EditableSurface() {
+  const [editor] = useLexicalComposerContext();
+
+  const focusEditorToEnd = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    if (target.isContentEditable) return;
+
+    event.preventDefault();
+    editor.focus(() => {
+      editor.update(() => {
+        $getRoot().selectEnd();
+      });
+    });
+  };
+
+  return (
+    <div className="px-6" onMouseDown={focusEditorToEnd}>
+      <div aria-hidden="true" className="h-9" />
+      <ContentEditable className="relative z-10 min-h-full w-full text-left outline-none" />
+      <div aria-hidden="true" className="h-9" />
+    </div>
+  );
 }
 
 function EditorComponent({
@@ -125,11 +149,7 @@ function EditorComponent({
             <RichTextPlugin
               contentEditable={
                 !readOnly ? (
-                  <div className="px-6">
-                    <div aria-hidden="true" className="h-9" />
-                    <ContentEditable className="relative z-10 min-h-full w-full text-left outline-none" />
-                    <div aria-hidden="true" className="h-9" />
-                  </div>
+                  <EditableSurface />
                 ) : (
                   <ContentEditable
                     className={cn(
