@@ -117,7 +117,10 @@
   }
 
   .editor-table {
-    @apply my-3 w-full max-w-full table-fixed border-collapse border border-slate-200 text-left text-[15px] dark:border-slate-800;
+    @apply my-3 max-w-full border-collapse border border-slate-200 text-left text-[15px] dark:border-slate-800;
+    width: max-content;
+    min-width: min(100%, 24rem);
+    table-layout: fixed;
   }
 
   .editor-table-body {
