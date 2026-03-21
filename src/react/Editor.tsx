@@ -34,7 +34,7 @@ import NormalizeTableColumnWidthsPlugin from "./plugins/NormalizeTableColumnWidt
 
 function Placeholder() {
   return (
-    <div className="pointer-events-none absolute top-6 left-6 select-none overflow-hidden text-ellipsis whitespace-nowrap text-gray-400">
+    <div className="pointer-events-none absolute top-9 left-6 select-none overflow-hidden text-ellipsis whitespace-nowrap text-gray-400">
       Enter some rich text...
     </div>
   );
@@ -110,7 +110,7 @@ function EditorComponent({
           <div
             data-editor-scroll-area
             className={cn(
-              !readOnly && "absolute inset-0 overflow-y-auto px-6 py-6",
+              !readOnly && "absolute inset-0 overflow-y-auto px-6 py-9",
               readOnly && readOnlyRenderScrollAreaClassName
             )}
           >
