@@ -1,0 +1,174 @@
+"use client";
+
+import { $convertToMarkdownString } from "@lexical/markdown";
+import { ClickableLinkPlugin } from "@lexical/react/LexicalClickableLinkPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
+import { LexicalEditor } from "lexical";
+import React, { memo, useEffect, useMemo } from "react";
+
+import { isLexicalEditorStateString } from "../core/contentFormat";
+import { cn } from "../core/cx";
+import {
+  readOnlyRenderContentClassName,
+  readOnlyRenderFrameClassName,
+  readOnlyRenderRootClassName,
+  readOnlyRenderScrollAreaClassName,
+} from "../core/readOnlyRenderShell";
+import theme from "../core/theme";
+import { EditorNodes } from "../core/nodes";
+import { CUSTOM_TRANSFORMERS } from "../core/transformers";
+import CodeHighlightPlugin from "./plugins/code-highlight-plugin";
+import MarkdownInitializerPlugin from "./plugins/MarkdownInitializerPlugin";
+import NormalizeMediaParagraphPlugin from "./plugins/NormalizeMediaParagraphPlugin";
+import NormalizeTableColumnWidthsPlugin from "./plugins/NormalizeTableColumnWidthsPlugin";
+
+function Placeholder() {
+  return (
+    <div className="pointer-events-none absolute top-2 left-12 select-none overflow-hidden text-ellipsis whitespace-nowrap text-gray-400">
+      Enter some rich text...
+    </div>
+  );
+}
+
+interface EditorProps {
+  readOnly?: boolean;
+  initialEditorState?: string | null;
+  content?: string;
+  markdown?: string;
+  onInit?: (editor: LexicalEditor) => void;
+  onChange?: (value: string) => void;
+  outputFormat?: "markdown" | "json";
+  className?: string;
+  namespace?: string;
+  toolbar?: React.ReactNode;
+  editablePlugins?: React.ReactNode;
+}
+
+function EditorInitPlugin({ onInit }: { onInit: (editor: LexicalEditor) => void }) {
+  const [editor] = useLexicalComposerContext();
+
+  useEffect(() => {
+    onInit(editor);
+  }, [editor, onInit]);
+
+  return null;
+}
+
+function EditorComponent({
+  readOnly = false,
+  initialEditorState,
+  content,
+  markdown,
+  onInit,
+  onChange,
+  outputFormat = "markdown",
+  className,
+  namespace = "DinnLexicalEditor",
+  toolbar,
+  editablePlugins,
+}: EditorProps) {
+  const hasLexicalState = isLexicalEditorStateString(content);
+  const resolvedInitialEditorState =
+    initialEditorState ?? (hasLexicalState ? content : undefined);
+  const legacyMarkdown = markdown ?? (!hasLexicalState ? content || "" : "");
+  const initialConfig = useMemo(
+    () => ({
+      namespace,
+      theme,
+      nodes: EditorNodes,
+      editorState: resolvedInitialEditorState,
+      editable: !readOnly,
+      onError(error: Error) {
+        throw error;
+      },
+    }),
+    [namespace, readOnly, resolvedInitialEditorState]
+  );
+
+  return (
+    <LexicalComposer initialConfig={initialConfig}>
+      <div
+        className={cn(
+          readOnlyRenderRootClassName,
+          !readOnly && "h-full",
+          !readOnly && "overflow-hidden rounded-lg border bg-background shadow-sm",
+          className
+        )}
+      >
+        {!readOnly && toolbar}
+        <div
+          className={cn(
+            readOnlyRenderFrameClassName,
+            !readOnly && "min-h-0 flex-1"
+          )}
+        >
+          <div
+            data-editor-scroll-area
+            className={cn(
+              !readOnly && "absolute inset-0 overflow-x-auto overflow-y-auto",
+              readOnly && readOnlyRenderScrollAreaClassName
+            )}
+          >
+            <RichTextPlugin
+              contentEditable={
+                <ContentEditable
+                  className={cn(
+                    readOnly && readOnlyRenderContentClassName,
+                    !readOnly && "relative z-10 w-full min-h-full text-left outline-none",
+                    !readOnly ? "pl-12 pr-4 py-2" : "py-2"
+                  )}
+                />
+              }
+              placeholder={!readOnly ? <Placeholder /> : null}
+              ErrorBoundary={({ children }) => <div>{children}</div>}
+            />
+          </div>
+          <HistoryPlugin />
+          {!readOnly && <AutoFocusPlugin />}
+          <ListPlugin />
+          <TablePlugin />
+          <LinkPlugin />
+          <ClickableLinkPlugin newTab />
+          <CodeHighlightPlugin />
+          <NormalizeMediaParagraphPlugin />
+          {readOnly && <NormalizeTableColumnWidthsPlugin />}
+          <MarkdownShortcutPlugin transformers={CUSTOM_TRANSFORMERS} />
+          {!readOnly && editablePlugins}
+          {onChange && (
+            <OnChangePlugin
+              onChange={(editorState) => {
+                editorState.read(() => {
+                  if (outputFormat === "json") {
+                    onChange(JSON.stringify(editorState.toJSON()));
+                    return;
+                  }
+
+                  onChange($convertToMarkdownString(CUSTOM_TRANSFORMERS));
+                });
+              }}
+            />
+          )}
+          {!resolvedInitialEditorState && (
+            <MarkdownInitializerPlugin
+              markdown={legacyMarkdown || ""}
+              transformers={CUSTOM_TRANSFORMERS}
+            />
+          )}
+          {onInit && <EditorInitPlugin onInit={onInit} />}
+        </div>
+      </div>
+    </LexicalComposer>
+  );
+}
+
+export const Editor = memo(EditorComponent);
