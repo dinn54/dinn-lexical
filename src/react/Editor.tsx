@@ -116,14 +116,18 @@ function EditorComponent({
           >
             <RichTextPlugin
               contentEditable={
-                <ContentEditable
-                  className={cn(
-                    readOnly && readOnlyRenderContentClassName,
-                    !readOnly &&
-                      "relative z-10 box-border min-h-full w-full px-6 pt-9 pb-9 text-left outline-none",
-                    !readOnly ? "" : "py-2"
-                  )}
-                />
+                !readOnly ? (
+                  <div className="px-6 py-9">
+                    <ContentEditable className="relative z-10 min-h-full w-full text-left outline-none" />
+                  </div>
+                ) : (
+                  <ContentEditable
+                    className={cn(
+                      readOnlyRenderContentClassName,
+                      "py-2"
+                    )}
+                  />
+                )
               }
               placeholder={!readOnly ? <Placeholder /> : null}
               ErrorBoundary={({ children }) => <div>{children}</div>}
