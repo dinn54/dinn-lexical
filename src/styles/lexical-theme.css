@@ -59,11 +59,11 @@
   }
 
   .editor-heading-h2 {
-    @apply font-heading scroll-m-20 mb-2.5 mt-8 text-xl font-bold tracking-tight text-slate-900 dark:text-white md:mt-10;
+    @apply font-heading scroll-m-20 mb-2.5 mt-8 text-xl font-bold tracking-tight text-slate-900 first:mt-0 dark:text-white md:mt-10;
   }
 
   .editor-heading-h3 {
-    @apply font-heading scroll-m-20 mb-2 mt-6 text-lg font-bold tracking-tight text-slate-900 dark:text-white;
+    @apply font-heading scroll-m-20 mb-2 mt-6 text-lg font-bold tracking-tight text-slate-900 first:mt-0 dark:text-white;
   }
 
   .editor-heading-h4 {
