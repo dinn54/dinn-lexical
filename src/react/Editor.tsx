@@ -13,6 +13,7 @@ import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPl
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
+import { useLexicalIsTextContentEmpty } from "@lexical/react/useLexicalIsTextContentEmpty";
 import { $getRoot, LexicalEditor } from "lexical";
 import React, { memo, useEffect, useMemo } from "react";
 
@@ -31,19 +32,6 @@ import CodeHighlightPlugin from "./plugins/code-highlight-plugin";
 import MarkdownInitializerPlugin from "./plugins/MarkdownInitializerPlugin";
 import NormalizeMediaParagraphPlugin from "./plugins/NormalizeMediaParagraphPlugin";
 import NormalizeTableColumnWidthsPlugin from "./plugins/NormalizeTableColumnWidthsPlugin";
-
-function Placeholder() {
-  return (
-    <div
-      className={cn(
-        theme.placeholder,
-        "pointer-events-none absolute top-[2.8rem] left-6 select-none overflow-hidden text-ellipsis whitespace-nowrap"
-      )}
-    >
-      Enter some rich text...
-    </div>
-  );
-}
 
 interface EditorProps {
   readOnly?: boolean;
@@ -72,6 +60,7 @@ function EditorInitPlugin({ onInit }: { onInit: (editor: LexicalEditor) => void 
 
 function EditableSurface() {
   const [editor] = useLexicalComposerContext();
+  const isEmpty = useLexicalIsTextContentEmpty(editor, true);
 
   const focusEditorToEnd = (event: React.MouseEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement;
@@ -86,7 +75,17 @@ function EditableSurface() {
   };
 
   return (
-    <div className="px-6" onMouseDown={focusEditorToEnd}>
+    <div className="relative px-6" onMouseDown={focusEditorToEnd}>
+      {isEmpty && (
+        <div
+          className={cn(
+            theme.placeholder,
+            "pointer-events-none absolute top-[2.8rem] left-0 select-none overflow-hidden text-ellipsis whitespace-nowrap"
+          )}
+        >
+          Enter some rich text...
+        </div>
+      )}
       <div aria-hidden="true" className="h-9" />
       <ContentEditable className="relative z-10 min-h-full w-full text-left outline-none" />
       <div aria-hidden="true" className="h-9" />
@@ -159,7 +158,7 @@ function EditorComponent({
                   />
                 )
               }
-              placeholder={!readOnly ? <Placeholder /> : null}
+              placeholder={null}
               ErrorBoundary={({ children }) => <div>{children}</div>}
             />
           </div>
