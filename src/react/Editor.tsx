@@ -110,7 +110,7 @@ function EditorComponent({
           <div
             data-editor-scroll-area
             className={cn(
-              !readOnly && "absolute inset-0 overflow-y-auto px-6 py-9",
+              !readOnly && "absolute inset-0 overflow-y-auto",
               readOnly && readOnlyRenderScrollAreaClassName
             )}
           >
@@ -119,7 +119,8 @@ function EditorComponent({
                 <ContentEditable
                   className={cn(
                     readOnly && readOnlyRenderContentClassName,
-                    !readOnly && "relative z-10 min-h-full w-full text-left outline-none",
+                    !readOnly &&
+                      "relative z-10 box-border min-h-full w-full px-6 pt-9 pb-9 text-left outline-none",
                     !readOnly ? "" : "py-2"
                   )}
                 />
