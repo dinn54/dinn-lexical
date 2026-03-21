@@ -34,7 +34,7 @@ import NormalizeTableColumnWidthsPlugin from "./plugins/NormalizeTableColumnWidt
 
 function Placeholder() {
   return (
-    <div className="pointer-events-none absolute top-2 left-12 select-none overflow-hidden text-ellipsis whitespace-nowrap text-gray-400">
+    <div className="pointer-events-none absolute top-6 left-6 select-none overflow-hidden text-ellipsis whitespace-nowrap text-gray-400">
       Enter some rich text...
     </div>
   );
@@ -120,7 +120,7 @@ function EditorComponent({
                   className={cn(
                     readOnly && readOnlyRenderContentClassName,
                     !readOnly && "relative z-10 min-h-full w-full text-left outline-none",
-                    !readOnly ? "pl-12 pr-4 py-2" : "py-2"
+                    !readOnly ? "px-6 py-6" : "py-2"
                   )}
                 />
               }
