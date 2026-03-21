@@ -99,23 +99,18 @@ function EditorComponent({
     <LexicalComposer initialConfig={initialConfig}>
       <div
         className={cn(
-          readOnlyRenderRootClassName,
-          !readOnly && "h-full",
-          !readOnly && "overflow-hidden rounded-lg border bg-background shadow-sm",
+          readOnly
+            ? readOnlyRenderRootClassName
+            : "relative flex h-full w-full flex-col overflow-hidden rounded-lg border bg-background shadow-sm",
           className
         )}
       >
         {!readOnly && toolbar}
-        <div
-          className={cn(
-            readOnlyRenderFrameClassName,
-            !readOnly && "min-h-0 flex-1"
-          )}
-        >
+        <div className={cn(readOnly ? readOnlyRenderFrameClassName : "relative min-h-0 flex-1")}>
           <div
             data-editor-scroll-area
             className={cn(
-              !readOnly && "absolute inset-0 overflow-x-auto overflow-y-auto",
+              !readOnly && "absolute inset-0 overflow-y-auto",
               readOnly && readOnlyRenderScrollAreaClassName
             )}
           >
@@ -124,7 +119,7 @@ function EditorComponent({
                 <ContentEditable
                   className={cn(
                     readOnly && readOnlyRenderContentClassName,
-                    !readOnly && "relative z-10 w-full min-h-full text-left outline-none",
+                    !readOnly && "relative z-10 min-h-full w-full text-left outline-none",
                     !readOnly ? "pl-12 pr-4 py-2" : "py-2"
                   )}
                 />
