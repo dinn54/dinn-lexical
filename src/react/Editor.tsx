@@ -14,7 +14,7 @@ import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
 import { useLexicalIsTextContentEmpty } from "@lexical/react/useLexicalIsTextContentEmpty";
-import { $getRoot, LexicalEditor } from "lexical";
+import { $createParagraphNode, $getRoot, LexicalEditor } from "lexical";
 import React, { memo, useEffect, useMemo } from "react";
 
 import { isLexicalEditorStateString } from "../core/contentFormat";
@@ -69,7 +69,17 @@ function EditableSurface() {
     event.preventDefault();
     editor.focus(() => {
       editor.update(() => {
-        $getRoot().selectEnd();
+        const root = $getRoot();
+        const firstChild = root.getFirstChild();
+
+        if (firstChild) {
+          firstChild.selectStart();
+          return;
+        }
+
+        const paragraph = $createParagraphNode();
+        root.append(paragraph);
+        paragraph.selectStart();
       });
     });
   };
