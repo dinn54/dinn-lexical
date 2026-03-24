@@ -76,18 +76,20 @@ function EditableSurface() {
 
   return (
     <div className="relative px-6" onMouseDown={focusEditorToEnd}>
-      {isEmpty && (
-        <div
-          className={cn(
-            theme.placeholder,
-            "pointer-events-none absolute top-9 left-0 select-none overflow-hidden text-ellipsis whitespace-nowrap text-[15px] leading-[1.75]"
-          )}
-        >
-          Enter some rich text...
-        </div>
-      )}
       <div aria-hidden="true" className="h-9" />
-      <ContentEditable className="relative z-10 min-h-full w-full text-left outline-none" />
+      <div className="relative">
+        {isEmpty && (
+          <div
+            className={cn(
+              theme.placeholder,
+              "pointer-events-none absolute top-0 left-0 z-0 select-none overflow-hidden text-ellipsis whitespace-nowrap text-[15px] leading-[1.75]"
+            )}
+          >
+            Enter some rich text...
+          </div>
+        )}
+        <ContentEditable className="relative z-10 min-h-full w-full text-left outline-none" />
+      </div>
       <div aria-hidden="true" className="h-9" />
     </div>
   );
