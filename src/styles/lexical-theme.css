@@ -117,9 +117,8 @@
   }
 
   .editor-table {
-    @apply my-3 border-collapse border border-slate-200 text-left text-[15px] dark:border-slate-800;
-    width: max-content;
-    min-width: 24rem;
+    @apply my-3 w-full max-w-full border-collapse border border-slate-200 text-left text-[15px] dark:border-slate-800;
+    min-width: min(100%, 24rem);
     table-layout: fixed;
   }
 
