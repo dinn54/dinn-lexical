@@ -64,7 +64,7 @@ function EditableSurface() {
 
   const focusEditorToEnd = (event: React.MouseEvent<HTMLDivElement>) => {
     const target = event.target as HTMLElement;
-    if (target.isContentEditable) return;
+    if (!isEmpty && target.isContentEditable) return;
 
     event.preventDefault();
     editor.focus(() => {
