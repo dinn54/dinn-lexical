@@ -80,7 +80,7 @@ function EditableSurface() {
         <div
           className={cn(
             theme.placeholder,
-            "pointer-events-none absolute top-[2.8rem] left-0 select-none overflow-hidden text-ellipsis whitespace-nowrap"
+            "pointer-events-none absolute top-9 left-0 select-none overflow-hidden text-ellipsis whitespace-nowrap text-[15px] leading-[1.75]"
           )}
         >
           Enter some rich text...
