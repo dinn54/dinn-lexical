@@ -62,30 +62,47 @@ function EditableSurface() {
   const [editor] = useLexicalComposerContext();
   const isEmpty = useLexicalIsTextContentEmpty(editor, true);
 
-  const focusEditorToEnd = (event: React.MouseEvent<HTMLDivElement>) => {
-    const target = event.target as HTMLElement;
-    if (!isEmpty && target.isContentEditable) return;
-
-    event.preventDefault();
-    editor.focus(() => {
+  const focusEditorToBoundary = (position: "start" | "end") => {
+    editor.focus();
+    requestAnimationFrame(() => {
       editor.update(() => {
         const root = $getRoot();
-        const firstChild = root.getFirstChild();
 
-        if (firstChild) {
-          firstChild.selectStart();
+        if (position === "start") {
+          const firstChild = root.getFirstChild();
+          if (firstChild) {
+            firstChild.selectStart();
+            return;
+          }
+
+          const paragraph = $createParagraphNode();
+          root.append(paragraph);
+          paragraph.selectStart();
           return;
         }
 
-        const paragraph = $createParagraphNode();
-        root.append(paragraph);
-        paragraph.selectStart();
+        root.selectEnd();
       });
+      editor.focus();
     });
   };
 
+  const focusEditorToEnd = (event: React.MouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    if (isEmpty) {
+      event.preventDefault();
+      focusEditorToBoundary("start");
+      return;
+    }
+
+    if (target.isContentEditable) return;
+
+    event.preventDefault();
+    focusEditorToBoundary("end");
+  };
+
   return (
-    <div className="relative px-6" onMouseDown={focusEditorToEnd}>
+    <div className="relative px-6" onMouseDownCapture={focusEditorToEnd}>
       <div aria-hidden="true" className="h-9" />
       <div className="relative">
         {isEmpty && (
