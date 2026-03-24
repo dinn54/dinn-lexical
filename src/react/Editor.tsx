@@ -102,9 +102,12 @@ function EditableSurface() {
   };
 
   return (
-    <div className="relative px-6" onMouseDownCapture={focusEditorToEnd}>
+    <div
+      className="relative flex min-h-full flex-col px-6"
+      onMouseDownCapture={focusEditorToEnd}
+    >
       <div aria-hidden="true" className="h-9" />
-      <div className="relative">
+      <div className="relative flex-1">
         {isEmpty && (
           <div
             className={cn(
