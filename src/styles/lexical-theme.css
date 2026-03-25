@@ -183,7 +183,12 @@
   }
 
   .editor-code-block {
-    @apply relative my-3 block w-full overflow-x-auto rounded-lg border border-slate-200/10 bg-zinc-900 px-4 py-3 font-mono text-[13px] leading-[1.6] tracking-normal text-gray-50 shadow-sm dark:border-slate-800 dark:bg-zinc-950 whitespace-pre;
+    @apply relative my-3 block w-full overflow-x-auto overflow-y-hidden rounded-lg border border-slate-200/10 bg-zinc-900 px-4 py-3 font-mono text-[13px] leading-[1.6] tracking-normal text-gray-50 shadow-sm dark:border-slate-800 dark:bg-zinc-950;
+    white-space: pre;
+    word-break: normal;
+    overflow-wrap: normal;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.7) rgba(15, 23, 42, 0.92);
   }
 
   .editor-code-language {
@@ -191,11 +196,45 @@
   }
 
   .editor-code-pre {
-    @apply relative;
+    @apply relative m-0;
+    min-width: max-content;
+    white-space: inherit;
   }
 
   .editor-code-content {
     @apply block font-mono text-sm leading-tight;
+    min-width: max-content;
+    white-space: inherit;
+  }
+
+  .editor-code-block code {
+    min-width: max-content;
+    white-space: inherit;
+  }
+
+  .editor-code-block::-webkit-scrollbar {
+    height: 10px;
+  }
+
+  .editor-code-block::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.92);
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+  }
+
+  .dark .editor-code-block::-webkit-scrollbar-track {
+    background: rgba(2, 6, 23, 0.96);
+  }
+
+  .editor-code-block::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.72);
+    border: 2px solid rgba(15, 23, 42, 0.92);
+    border-radius: 9999px;
+  }
+
+  .dark .editor-code-block::-webkit-scrollbar-thumb {
+    background: rgba(100, 116, 139, 0.9);
+    border-color: rgba(2, 6, 23, 0.96);
   }
 
   .editor-hr-block {
