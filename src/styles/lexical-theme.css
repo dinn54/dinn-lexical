@@ -357,7 +357,8 @@
     border-radius: inherit;
   }
 
-  .editor-resizable-node-frame .react-tweet-theme {
+  .editor-resizable-node-frame .react-tweet-theme,
+  .editor-media-frame .react-tweet-theme {
     --tweet-container-margin: 0;
   }
 
