@@ -86,6 +86,18 @@ export function normalizeGeneratedLexicalHtml(html: string): string {
 
   normalizeTableColumnWidths(body);
 
+  body.querySelectorAll("pre.editor-code-block").forEach((codeBlockElement) => {
+    codeBlockElement.querySelectorAll<HTMLElement>("span").forEach((tokenElement) => {
+      if (tokenElement.style.whiteSpace === "pre-wrap") {
+        tokenElement.style.removeProperty("white-space");
+      }
+
+      if (!tokenElement.getAttribute("style")) {
+        tokenElement.removeAttribute("style");
+      }
+    });
+  });
+
   body.querySelectorAll("p").forEach((paragraphElement) => {
     const childElements = Array.from(paragraphElement.children);
     if (childElements.length === 0) {
