@@ -1,4 +1,5 @@
 import type { LexicalNode } from "./parseMarkdownServer";
+import detailViewerShowcase from "./fixtures/detailViewerShowcase";
 import markdownUserSample from "./fixtures/markdownUserSample";
 import lexicalUserSample from "./fixtures/lexical-user-sample.json";
 import tableEditorSample from "./fixtures/table-editor-sample.json";
@@ -110,6 +111,13 @@ export const lexicalComparisonFixtures: Record<string, LexicalComparisonFixture>
         ],
       },
     ],
+  },
+  "detail-showcase": {
+    id: "detail-showcase",
+    title: "Detail Viewer Showcase Fixture",
+    kind: "markdown",
+    markdown: detailViewerShowcase,
+    content: detailViewerShowcase,
   },
   "user-lexical": {
     id: "user-lexical",
