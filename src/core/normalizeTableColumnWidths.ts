@@ -58,6 +58,10 @@ export function normalizeTableColumnWidths(root: ParentNode): void {
     }
 
     const normalizedWidths = columnWidths.map((width) => formatPercent((width / totalWidth) * 100));
+
+    tableElement.style.width = `${totalWidth}px`;
+    tableElement.style.maxWidth = "100%";
+
     const colElements = Array.from(
       tableElement.querySelectorAll<HTMLTableColElement>(":scope > colgroup > col")
     );
