@@ -1,4 +1,5 @@
-export const readOnlyRenderRootClassName = "relative flex w-full flex-col";
+export const readOnlyRenderRootClassName =
+  "editor-readonly-view relative flex w-full flex-col";
 export const readOnlyRenderFrameClassName = "relative";
 export const readOnlyRenderScrollAreaClassName = "relative overflow-x-auto";
 export const readOnlyRenderContentClassName =
