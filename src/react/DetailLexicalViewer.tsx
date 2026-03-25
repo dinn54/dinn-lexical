@@ -22,7 +22,6 @@ export function DetailLexicalViewer({
 
   return (
     <DetailLexicalViewerClient
-      content={content}
       fallbackHtml={fallbackHtml}
       className={className}
       style={style}

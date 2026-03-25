@@ -1,3 +1,4 @@
+export { ClientReadOnlyLexicalViewer } from "./react/ClientReadOnlyLexicalViewer";
 export { Editor } from "./react/Editor";
 export { DetailLexicalViewer } from "./react/DetailLexicalViewer";
 export { ReadOnlyLexicalRenderer } from "./react/ReadOnlyLexicalRenderer";
