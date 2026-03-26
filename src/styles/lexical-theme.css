@@ -283,9 +283,7 @@
   }
 
   .editor-detail-tweet-host {
-    display: block;
-    line-height: 0;
-    margin-top: -2px;
+    display: contents;
   }
 
   .editor-media-fallback {

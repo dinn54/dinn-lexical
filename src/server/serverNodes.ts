@@ -288,7 +288,7 @@ export class ServerYouTubeNode extends DecoratorNode<null> {
     wrapper.style.maxWidth = "100%";
 
     const frame = document.createElement("div");
-    frame.className = theme.media.frame;
+    frame.className = theme.resizable.frame;
 
     const element = document.createElement("iframe");
     element.className = theme.media.aspectVideo;
