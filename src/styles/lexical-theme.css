@@ -285,6 +285,7 @@
   .editor-detail-tweet-host {
     display: block;
     line-height: 0;
+    margin-top: -2px;
   }
 
   .editor-media-fallback {
