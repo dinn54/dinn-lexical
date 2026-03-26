@@ -284,6 +284,7 @@ export class ServerYouTubeNode extends DecoratorNode<null> {
   exportDOM(): DOMExportOutput {
     const wrapper = document.createElement("div");
     wrapper.className = `${theme.resizable.node} ${theme.embedBlock.base} ${theme.media.youtube}`.trim();
+    wrapper.style.display = "block";
     wrapper.style.width = `min(100%, ${this.__width}px)`;
     wrapper.style.maxWidth = "100%";
 
