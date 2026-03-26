@@ -388,6 +388,9 @@ export class ServerTweetNode extends DecoratorNode<null> {
   }
 
   exportDOM(): DOMExportOutput {
+    const alignWrapper = document.createElement("div");
+    alignWrapper.className = "flex w-full justify-start";
+
     const wrapper = document.createElement("div");
     wrapper.className = `${theme.resizable.node} ${theme.embedBlock.base} ${theme.media.tweet}`.trim();
     wrapper.style.display = "block";
@@ -427,7 +430,8 @@ export class ServerTweetNode extends DecoratorNode<null> {
 
     frame.appendChild(element);
     wrapper.appendChild(frame);
-    return { element: wrapper };
+    alignWrapper.appendChild(wrapper);
+    return { element: alignWrapper };
   }
 
   decorate(): null {
