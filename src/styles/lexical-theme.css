@@ -282,6 +282,11 @@
     @apply relative rounded-lg overflow-hidden;
   }
 
+  .editor-detail-tweet-host {
+    display: block;
+    line-height: 0;
+  }
+
   .editor-media-fallback {
     @apply animate-pulse rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/50;
   }
@@ -358,7 +363,8 @@
   }
 
   .editor-resizable-node-frame .react-tweet-theme,
-  .editor-media-frame .react-tweet-theme {
+  .editor-media-frame .react-tweet-theme,
+  .editor-detail-tweet-host .react-tweet-theme {
     --tweet-container-margin: 0;
   }
 

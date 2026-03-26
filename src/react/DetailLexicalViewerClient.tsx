@@ -49,7 +49,7 @@ export function DetailLexicalViewerClient({
       }
 
       const width = tweetElement.style.width;
-      tweetElement.className = "";
+      tweetElement.className = "editor-detail-tweet-host";
       tweetElement.replaceChildren();
       tweetElement.style.width = width;
       tweetElement.style.maxWidth = "100%";
