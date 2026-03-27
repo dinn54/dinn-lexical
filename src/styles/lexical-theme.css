@@ -122,6 +122,12 @@
     table-layout: fixed;
   }
 
+  .editor-editable-view .editor-table {
+    width: auto;
+    max-width: none;
+    min-width: 24rem;
+  }
+
   .editor-table-body {
     @apply divide-y divide-muted bg-card;
   }

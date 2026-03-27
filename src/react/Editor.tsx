@@ -163,7 +163,7 @@ function EditorComponent({
         className={cn(
           readOnly
             ? readOnlyRenderRootClassName
-            : "relative flex h-full w-full flex-col overflow-hidden rounded-lg border bg-background shadow-sm",
+            : "editor-editable-view relative flex h-full w-full flex-col overflow-hidden rounded-lg border bg-background shadow-sm",
           className
         )}
         style={style}
