@@ -202,7 +202,7 @@ function EditorComponent({
           <ClickableLinkPlugin newTab />
           <CodeHighlightPlugin />
           <NormalizeMediaParagraphPlugin />
-          <NormalizeTableColumnWidthsPlugin />
+          {readOnly && <NormalizeTableColumnWidthsPlugin />}
           <MarkdownShortcutPlugin transformers={CUSTOM_TRANSFORMERS} />
           {!readOnly && editablePlugins}
           {onChange && (
