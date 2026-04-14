@@ -34,24 +34,32 @@ function normalizeReadOnlyMediaWidths(container: HTMLElement) {
 
   resizableNodes.forEach((node) => {
     const declaredWidth = Number.parseFloat(node.style.width || "");
-    if (!Number.isFinite(declaredWidth) || declaredWidth <= 0) {
-      return;
-    }
+    const mediaImage = node.querySelector<HTMLImageElement>(`.${theme.media.image}`);
+    const imageWidthAttr = Number.parseFloat(mediaImage?.getAttribute("width") || "");
+    const naturalWidth = mediaImage?.naturalWidth ?? 0;
+    const fallbackWidth =
+      naturalWidth > 0
+        ? naturalWidth
+        : Number.isFinite(imageWidthAttr) && imageWidthAttr > 0
+          ? imageWidthAttr
+          : MIN_RESIZABLE_WIDTH;
 
-    const boundaryWidth = getResizeBoundaryWidth(node, declaredWidth);
+    const preferredWidth =
+      Number.isFinite(declaredWidth) && declaredWidth > 0
+        ? declaredWidth
+        : fallbackWidth;
+    const boundaryWidth = getResizeBoundaryWidth(node, preferredWidth);
     const clampedWidth = clampToContainerWidth(
-      declaredWidth,
+      preferredWidth,
       boundaryWidth,
       MIN_RESIZABLE_WIDTH
     );
 
-    if (Math.abs(clampedWidth - declaredWidth) < 1) {
-      node.style.maxWidth = "100%";
-      return;
-    }
-
     node.style.width = `${clampedWidth}px`;
     node.style.maxWidth = "100%";
+    if (mediaImage) {
+      mediaImage.setAttribute("width", `${clampedWidth}`);
+    }
   });
 }
 
@@ -92,6 +100,20 @@ export function DetailLexicalViewerClient({
       root.render(<EnhancedTweet tweetId={tweetId} />);
     });
 
+    const imageElements = Array.from(
+      container.querySelectorAll<HTMLImageElement>(`.${theme.media.image}`)
+    );
+    const imageCleanups = imageElements.map((imageElement) => {
+      const handleLoad = () => {
+        normalizeReadOnlyMediaWidths(container);
+      };
+
+      imageElement.addEventListener("load", handleLoad);
+      return () => {
+        imageElement.removeEventListener("load", handleLoad);
+      };
+    });
+
     const resizeObserver =
       typeof ResizeObserver !== "undefined"
         ? new ResizeObserver(() => {
@@ -102,6 +124,9 @@ export function DetailLexicalViewerClient({
     resizeObserver?.observe(container);
 
     return () => {
+      imageCleanups.forEach((cleanup) => {
+        cleanup();
+      });
       resizeObserver?.disconnect();
       roots.forEach((root) => {
         root.unmount();
