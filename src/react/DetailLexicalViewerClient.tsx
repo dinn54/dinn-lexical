@@ -13,6 +13,7 @@ import {
   readOnlyRenderRootClassName,
   readOnlyRenderScrollAreaClassName,
 } from "../core/readOnlyRenderShell";
+import { clampToContainerWidth, getResizeBoundaryWidth } from "./nodes/resizeBounds";
 
 interface DetailLexicalViewerClientProps {
   fallbackHtml: string;
@@ -22,6 +23,36 @@ interface DetailLexicalViewerClientProps {
 
 function EnhancedTweet({ tweetId }: { tweetId: string }) {
   return <Tweet id={tweetId} />;
+}
+
+const MIN_RESIZABLE_WIDTH = 100;
+
+function normalizeReadOnlyMediaWidths(container: HTMLElement) {
+  const resizableNodes = Array.from(
+    container.querySelectorAll<HTMLElement>(`.${theme.resizable.node}`)
+  );
+
+  resizableNodes.forEach((node) => {
+    const declaredWidth = Number.parseFloat(node.style.width || "");
+    if (!Number.isFinite(declaredWidth) || declaredWidth <= 0) {
+      return;
+    }
+
+    const boundaryWidth = getResizeBoundaryWidth(node, declaredWidth);
+    const clampedWidth = clampToContainerWidth(
+      declaredWidth,
+      boundaryWidth,
+      MIN_RESIZABLE_WIDTH
+    );
+
+    if (Math.abs(clampedWidth - declaredWidth) < 1) {
+      node.style.maxWidth = "100%";
+      return;
+    }
+
+    node.style.width = `${clampedWidth}px`;
+    node.style.maxWidth = "100%";
+  });
 }
 
 export function DetailLexicalViewerClient({
@@ -36,6 +67,8 @@ export function DetailLexicalViewerClient({
     if (!container) {
       return;
     }
+
+    normalizeReadOnlyMediaWidths(container);
 
     const roots = new Map<HTMLElement, Root>();
     const tweetElements = Array.from(
@@ -59,7 +92,17 @@ export function DetailLexicalViewerClient({
       root.render(<EnhancedTweet tweetId={tweetId} />);
     });
 
+    const resizeObserver =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(() => {
+            normalizeReadOnlyMediaWidths(container);
+          })
+        : null;
+
+    resizeObserver?.observe(container);
+
     return () => {
+      resizeObserver?.disconnect();
       roots.forEach((root) => {
         root.unmount();
       });
