@@ -1,0 +1,4 @@
+GIT_USER_NAME="Your Name"
+GIT_USER_EMAIL="you@example.com"
+GITHUB_USERNAME="your-github-username"
+GITHUB_TOKEN="ghp_xxx_or_github_pat"
