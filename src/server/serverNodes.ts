@@ -285,7 +285,7 @@ export class ServerYouTubeNode extends DecoratorNode<null> {
     const wrapper = document.createElement("div");
     wrapper.className = `${theme.resizable.node} ${theme.embedBlock.base} ${theme.media.youtube}`.trim();
     wrapper.style.display = "block";
-    wrapper.style.width = `min(100%, ${this.__width}px)`;
+    wrapper.style.width = `${this.__width}px`;
     wrapper.style.maxWidth = "100%";
 
     const frame = document.createElement("div");
@@ -395,7 +395,7 @@ export class ServerTweetNode extends DecoratorNode<null> {
     const wrapper = document.createElement("div");
     wrapper.className = `${theme.resizable.node} ${theme.embedBlock.base} ${theme.media.tweet}`.trim();
     wrapper.style.display = "block";
-    wrapper.style.width = `min(100%, ${this.__width}px)`;
+    wrapper.style.width = `${this.__width}px`;
     wrapper.style.maxWidth = "100%";
 
     const frame = document.createElement("div");
