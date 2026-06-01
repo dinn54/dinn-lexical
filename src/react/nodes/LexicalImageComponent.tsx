@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import { mergeRegister } from "@lexical/utils";
@@ -22,44 +22,28 @@ import {
 } from "../ui/media-blocks";
 import { isRenderableImageSrc } from "../../core/imageSrc";
 
-const imageCache = new Set();
-
-function useSuspenseImage(src: string) {
-  if (!imageCache.has(src)) {
-    throw new Promise((resolve) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        imageCache.add(src);
-        resolve(null);
-      };
-      img.onerror = () => {
-        imageCache.add(src);
-        resolve(null);
-      };
-    });
-  }
-}
-
 function LazyImage({
   altText,
   className,
+  height,
   imageRef,
   src,
   width,
 }: {
   altText: string;
   className: string | null;
+  height: "inherit" | number;
   imageRef: { current: null | HTMLImageElement };
   src: string;
-  width: number;
+  width: "inherit" | number;
 }) {
-  useSuspenseImage(src);
   return (
     <img
       className={className || undefined}
       src={src}
       alt={altText}
+      width={typeof width === "number" && width > 0 ? width : undefined}
+      height={typeof height === "number" && height > 0 ? height : undefined}
       ref={imageRef}
       style={{
         width: "100%",
@@ -69,6 +53,19 @@ function LazyImage({
       draggable="false"
     />
   );
+}
+
+function getAspectRatio(width: "inherit" | number, height: "inherit" | number) {
+  if (
+    typeof width !== "number" ||
+    typeof height !== "number" ||
+    width <= 0 ||
+    height <= 0
+  ) {
+    return undefined;
+  }
+
+  return `${width} / ${height}`;
 }
 
 export default function LexicalImageComponent({
@@ -105,6 +102,7 @@ export default function LexicalImageComponent({
   );
   const isEditable = editor.isEditable();
   const canRenderImage = isRenderableImageSrc(src);
+  const aspectRatio = getAspectRatio(width, height);
 
   const onDelete = useCallback(
     (payload: KeyboardEvent) => {
@@ -217,14 +215,18 @@ export default function LexicalImageComponent({
         className={`${theme.resizable.node} ${isSelected && isEditable ? theme.embedBlock.focus : ""}`}
         style={{ width: `${currentWidth}px`, maxWidth: "100%" }}
       >
-        <span className={theme.resizable.frame}>
+        <span
+          className={theme.resizable.frame}
+          style={aspectRatio ? { aspectRatio } : undefined}
+        >
           {canRenderImage ? (
             <LazyImage
               className={theme.media.image}
               src={src}
               altText={altText}
               imageRef={imageRef}
-              width={currentWidth}
+              width={width}
+              height={height}
             />
           ) : (
             <span className="text-sm text-muted-foreground">
@@ -255,15 +257,9 @@ export default function LexicalImageComponent({
   const needsBlockAlignment =
     format === "center" || format === "right" || format === "end" || format === "justify";
 
-  return (
-    <Suspense
-      fallback={<div className={theme.media.loading} />}
-    >
-      {needsBlockAlignment ? (
-        <AlignableBlock format={format}>{figure}</AlignableBlock>
-      ) : (
-        <div className={theme.decoratorContents}>{figure}</div>
-      )}
-    </Suspense>
+  return needsBlockAlignment ? (
+    <AlignableBlock format={format}>{figure}</AlignableBlock>
+  ) : (
+    <div className={theme.decoratorContents}>{figure}</div>
   );
 }
