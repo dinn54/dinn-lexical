@@ -175,6 +175,32 @@ export class ImageNode extends DecoratorNode<React.JSX.Element> {
     writable.__height = height;
   }
 
+  setImageData({
+    altText,
+    height,
+    src,
+    width,
+  }: {
+    altText?: string;
+    height?: "inherit" | number;
+    src?: string;
+    width?: "inherit" | number;
+  }): void {
+    const writable = this.getWritable();
+    if (src !== undefined) {
+      writable.__src = src;
+    }
+    if (altText !== undefined) {
+      writable.__altText = altText;
+    }
+    if (width !== undefined) {
+      writable.__width = width;
+    }
+    if (height !== undefined) {
+      writable.__height = height;
+    }
+  }
+
   setShowCaption(showCaption: boolean): void {
     const writable = this.getWritable();
     writable.__showCaption = showCaption;

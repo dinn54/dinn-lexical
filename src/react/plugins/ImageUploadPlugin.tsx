@@ -2,7 +2,13 @@
 
 import { useCallback, useEffect } from "react";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { COMMAND_PRIORITY_EDITOR, PASTE_COMMAND } from "lexical";
+import {
+  $getNodeByKey,
+  COMMAND_PRIORITY_EDITOR,
+  PASTE_COMMAND,
+  type NodeKey,
+} from "lexical";
+import { $insertNodeToNearestRoot } from "@lexical/utils";
 
 import {
   getImageFilesFromDataTransfer,
@@ -10,7 +16,7 @@ import {
   type ImageUploadHandler,
   type ImageUploadSource,
 } from "../imageUpload";
-import { INSERT_IMAGE_COMMAND } from "../nodes/ImageNode";
+import { $createImageNode, $isImageNode } from "../nodes/ImageNode";
 
 function getClipboardImageFiles(event: Event): File[] {
   if (!("clipboardData" in event)) return [];
@@ -26,28 +32,87 @@ export function ImageUploadPlugin({
 }) {
   const [editor] = useLexicalComposerContext();
 
+  const insertPreviewImage = useCallback(
+    (file: File) => {
+      const previewUrl = URL.createObjectURL(file);
+      let nodeKey: NodeKey | null = null;
+
+      editor.update(() => {
+        const node = $createImageNode({
+          src: previewUrl,
+          altText: file.name || "Uploading image",
+        });
+        $insertNodeToNearestRoot(node);
+        nodeKey = node.getKey();
+      });
+
+      return { nodeKey, previewUrl };
+    },
+    [editor],
+  );
+
+  const removePreviewImage = useCallback(
+    (nodeKey: NodeKey | null) => {
+      if (!nodeKey) return;
+      editor.update(() => {
+        const node = $getNodeByKey(nodeKey);
+        if ($isImageNode(node)) {
+          node.remove();
+        }
+      });
+    },
+    [editor],
+  );
+
+  const replacePreviewImage = useCallback(
+    (
+      nodeKey: NodeKey | null,
+      uploaded: Awaited<ReturnType<ImageUploadHandler>>,
+      fallbackAltText: string,
+    ) => {
+      if (!nodeKey) return;
+      editor.update(() => {
+        const node = $getNodeByKey(nodeKey);
+        if (!$isImageNode(node)) return;
+
+        node.setImageData({
+          src: uploaded.src,
+          altText: uploaded.altText ?? fallbackAltText,
+          width: uploaded.width ?? "inherit",
+          height: uploaded.height ?? "inherit",
+        });
+      });
+    },
+    [editor],
+  );
+
   const uploadFiles = useCallback(
     (files: File[], source: ImageUploadSource) => {
       if (files.length === 0) return;
 
       void (async () => {
-        try {
-          for (const file of files) {
-            const uploaded = await onImageUpload(file, { source });
+        for (const file of files) {
+          const { nodeKey, previewUrl } = insertPreviewImage(file);
 
-            editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-              src: uploaded.src,
-              altText: uploaded.altText ?? file.name ?? "",
-              width: uploaded.width ?? undefined,
-              height: uploaded.height ?? undefined,
-            });
+          try {
+            const uploaded = await onImageUpload(file, { source });
+            replacePreviewImage(nodeKey, uploaded, file.name || "");
+          } catch (error) {
+            removePreviewImage(nodeKey);
+            onImageUploadError?.(error);
+          } finally {
+            URL.revokeObjectURL(previewUrl);
           }
-        } catch (error) {
-          onImageUploadError?.(error);
         }
       })();
     },
-    [editor, onImageUpload, onImageUploadError],
+    [
+      insertPreviewImage,
+      onImageUpload,
+      onImageUploadError,
+      removePreviewImage,
+      replacePreviewImage,
+    ],
   );
 
   useEffect(() => {
