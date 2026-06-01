@@ -6,6 +6,7 @@ import { COMMAND_PRIORITY_EDITOR, PASTE_COMMAND } from "lexical";
 
 import {
   getImageFilesFromDataTransfer,
+  UPLOAD_IMAGE_FILES_COMMAND,
   type ImageUploadHandler,
   type ImageUploadSource,
 } from "../imageUpload";
@@ -48,6 +49,17 @@ export function ImageUploadPlugin({
     },
     [editor, onImageUpload, onImageUploadError],
   );
+
+  useEffect(() => {
+    return editor.registerCommand(
+      UPLOAD_IMAGE_FILES_COMMAND,
+      ({ files, source = "file-dialog" }) => {
+        uploadFiles(files, source);
+        return files.length > 0;
+      },
+      COMMAND_PRIORITY_EDITOR,
+    );
+  }, [editor, uploadFiles]);
 
   useEffect(() => {
     return editor.registerCommand(

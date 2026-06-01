@@ -17,8 +17,10 @@ export type {
   ImageUploadContext,
   ImageUploadHandler,
   ImageUploadSource,
+  UploadImageFilesPayload,
   UploadedImage,
 } from "./react/imageUpload";
+export { UPLOAD_IMAGE_FILES_COMMAND } from "./react/imageUpload";
 export type { SerializedHorizontalRuleNode } from "./react/nodes/HorizontalRuleNode";
 export type { SerializedTweetNode } from "./react/nodes/TweetNode";
 export type { SerializedYouTubeNode } from "./react/nodes/YouTubeNode";

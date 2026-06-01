@@ -1,3 +1,5 @@
+import { createCommand, type LexicalCommand } from "lexical";
+
 export type ImageUploadSource = "paste" | "drop" | "file-dialog";
 
 export type ImageUploadContext = {
@@ -15,6 +17,14 @@ export type ImageUploadHandler = (
   file: File,
   context: ImageUploadContext,
 ) => Promise<UploadedImage>;
+
+export type UploadImageFilesPayload = {
+  files: File[];
+  source?: ImageUploadSource;
+};
+
+export const UPLOAD_IMAGE_FILES_COMMAND: LexicalCommand<UploadImageFilesPayload> =
+  createCommand("UPLOAD_IMAGE_FILES_COMMAND");
 
 export function getImageFilesFromDataTransfer(dataTransfer: DataTransfer | null): File[] {
   if (!dataTransfer) return [];

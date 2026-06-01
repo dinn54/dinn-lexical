@@ -8,5 +8,7 @@ export type {
   ImageUploadContext,
   ImageUploadHandler,
   ImageUploadSource,
+  UploadImageFilesPayload,
   UploadedImage,
 } from "./imageUpload";
+export { UPLOAD_IMAGE_FILES_COMMAND } from "./imageUpload";
