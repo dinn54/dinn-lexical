@@ -26,7 +26,12 @@ export function getResizeBoundaryWidth(
   while (ancestor) {
     const ancestorWidth = getContentBoxWidth(ancestor);
     const display = window.getComputedStyle(ancestor).display;
-    if (ancestorWidth > 0 && display !== "inline") {
+    if (
+      ancestorWidth > 0 &&
+      display !== "inline" &&
+      display !== "inline-block" &&
+      display !== "inline-flex"
+    ) {
       return ancestorWidth;
     }
     ancestor = ancestor.parentElement;
