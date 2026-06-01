@@ -32,6 +32,9 @@ import CodeHighlightPlugin from "./plugins/code-highlight-plugin";
 import MarkdownInitializerPlugin from "./plugins/MarkdownInitializerPlugin";
 import NormalizeMediaParagraphPlugin from "./plugins/NormalizeMediaParagraphPlugin";
 import NormalizeTableColumnWidthsPlugin from "./plugins/NormalizeTableColumnWidthsPlugin";
+import { ImageUploadPlugin } from "./plugins/ImageUploadPlugin";
+import { InsertImagePlugin } from "./plugins/InsertImagePlugin";
+import type { ImageUploadHandler } from "./imageUpload";
 
 interface EditorProps {
   readOnly?: boolean;
@@ -46,6 +49,8 @@ interface EditorProps {
   namespace?: string;
   toolbar?: React.ReactNode;
   editablePlugins?: React.ReactNode;
+  onImageUpload?: ImageUploadHandler;
+  onImageUploadError?: (error: unknown) => void;
 }
 
 function EditorInitPlugin({ onInit }: { onInit: (editor: LexicalEditor) => void }) {
@@ -138,6 +143,8 @@ function EditorComponent({
   namespace = "DinnLexicalEditor",
   toolbar,
   editablePlugins,
+  onImageUpload,
+  onImageUploadError,
 }: EditorProps) {
   const hasLexicalState = isLexicalEditorStateString(content);
   const resolvedInitialEditorState =
@@ -202,6 +209,13 @@ function EditorComponent({
           <ClickableLinkPlugin newTab />
           <CodeHighlightPlugin />
           <NormalizeMediaParagraphPlugin />
+          {!readOnly && <InsertImagePlugin />}
+          {!readOnly && onImageUpload && (
+            <ImageUploadPlugin
+              onImageUpload={onImageUpload}
+              onImageUploadError={onImageUploadError}
+            />
+          )}
           {readOnly && <NormalizeTableColumnWidthsPlugin />}
           <MarkdownShortcutPlugin transformers={CUSTOM_TRANSFORMERS} />
           {!readOnly && editablePlugins}

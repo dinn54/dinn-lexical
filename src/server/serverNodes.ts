@@ -14,6 +14,7 @@ import {
   Spread,
 } from "lexical";
 import theme from "../core/theme";
+import { isRenderableImageSrc } from "../core/imageSrc";
 
 // ========== Horizontal Rule Node (서버용) ==========
 export type SerializedServerHorizontalRuleNode = SerializedLexicalNode;
@@ -160,6 +161,12 @@ export class ServerImageNode extends DecoratorNode<null> {
   }
 
   exportDOM(): DOMExportOutput {
+    if (!isRenderableImageSrc(this.__src)) {
+      const element = document.createElement("span");
+      element.textContent = this.__altText || this.__src;
+      return { element };
+    }
+
     const wrapper = document.createElement("span");
     wrapper.className = theme.image;
 

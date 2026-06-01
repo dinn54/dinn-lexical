@@ -15,6 +15,7 @@ import {
 } from "lexical";
 import React from "react";
 import LexicalImageComponent from "./LexicalImageComponent";
+import { isRenderableImageSrc } from "../../core/imageSrc";
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<ImagePayload> = createCommand(
   "INSERT_IMAGE_COMMAND"
@@ -103,6 +104,12 @@ export class ImageNode extends DecoratorNode<React.JSX.Element> {
   }
 
   exportDOM(): DOMExportOutput {
+    if (!isRenderableImageSrc(this.__src)) {
+      const element = document.createElement("span");
+      element.textContent = this.__altText || this.__src;
+      return { element };
+    }
+
     const element = document.createElement("img");
     element.setAttribute("src", this.__src);
     element.setAttribute("alt", this.__altText);
@@ -261,6 +268,10 @@ export function $isImageNode(
 function convertImageElement(domNode: Node): DOMConversionOutput | null {
   if (domNode instanceof HTMLImageElement) {
     const { alt: altText, src, width, height } = domNode;
+    if (!isRenderableImageSrc(src)) {
+      return null;
+    }
+
     const node = $createImageNode({ altText, height, src, width });
     return { node };
   }

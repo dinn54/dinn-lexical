@@ -35,6 +35,7 @@ import {
   $isServerHorizontalRuleNode,
   ServerHorizontalRuleNode,
 } from "./serverNodes";
+import { isRenderableImageSrc } from "../core/imageSrc";
 
 const OPTIONAL_IMAGE_TITLE = String.raw`(?:\s+"[^"]*")?`;
 
@@ -104,6 +105,11 @@ export const SERVER_IMAGE: Transformer = {
   ),
   replace: (textNode, match) => {
     const [, altText, src, widthStr] = match;
+    if (!isRenderableImageSrc(src)) {
+      textNode.replace($createTextNode(altText));
+      return;
+    }
+
     const width = widthStr ? parseInt(widthStr, 10) : 500;
     const imageNode = $createServerImageNode({
       altText,

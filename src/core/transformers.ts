@@ -36,6 +36,7 @@ import {
   $isYouTubeNode,
   YouTubeNode,
 } from "../react/nodes/YouTubeNode";
+import { isRenderableImageSrc } from "./imageSrc";
 
 const OPTIONAL_IMAGE_TITLE = String.raw`(?:\s+"[^"]*")?`;
 
@@ -58,6 +59,11 @@ export const IMAGE: Transformer = {
   ),
   replace: (textNode, match) => {
     const [, altText, src, widthStr] = match;
+    if (!isRenderableImageSrc(src)) {
+      textNode.replace($createTextNode(altText));
+      return;
+    }
+
     const width = widthStr ? parseInt(widthStr, 10) : 500;
     const imageNode = $createImageNode({
       altText,

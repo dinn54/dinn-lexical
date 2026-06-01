@@ -9,9 +9,17 @@ export { setupPrism } from "./server/setupPrism";
 export { theme } from "./core/theme";
 export { EditorNodes as nodes } from "./core/nodes";
 export { CUSTOM_TRANSFORMERS as transformers } from "./core/transformers";
+export { INSERT_IMAGE_COMMAND } from "./react/nodes/ImageNode";
+export { isRenderableImageSrc } from "./core/imageSrc";
 
+export type { ImagePayload, SerializedImageNode } from "./react/nodes/ImageNode";
+export type {
+  ImageUploadContext,
+  ImageUploadHandler,
+  ImageUploadSource,
+  UploadedImage,
+} from "./react/imageUpload";
 export type { SerializedHorizontalRuleNode } from "./react/nodes/HorizontalRuleNode";
-export type { SerializedImageNode } from "./react/nodes/ImageNode";
 export type { SerializedTweetNode } from "./react/nodes/TweetNode";
 export type { SerializedYouTubeNode } from "./react/nodes/YouTubeNode";
 export type { Transformer } from "@lexical/markdown";

@@ -19,9 +19,8 @@ import theme from "../../core/theme";
 import {
   AlignableBlock,
   MediaFigure,
-  MediaFrame,
 } from "../ui/media-blocks";
-import { getBlockAlignmentClass } from "./block-alignment";
+import { isRenderableImageSrc } from "../../core/imageSrc";
 
 const imageCache = new Set();
 
@@ -31,6 +30,10 @@ function useSuspenseImage(src: string) {
       const img = new Image();
       img.src = src;
       img.onload = () => {
+        imageCache.add(src);
+        resolve(null);
+      };
+      img.onerror = () => {
         imageCache.add(src);
         resolve(null);
       };
@@ -88,7 +91,7 @@ export default function LexicalImageComponent({
   height: "inherit" | number;
   maxWidth: number;
   showCaption: boolean;
-  caption: any;
+  caption: React.ReactNode;
   captionsEnabled: boolean;
 }): React.JSX.Element {
   const [editor] = useLexicalComposerContext();
@@ -101,6 +104,7 @@ export default function LexicalImageComponent({
     typeof width === "number" ? width : 500
   );
   const isEditable = editor.isEditable();
+  const canRenderImage = isRenderableImageSrc(src);
 
   const onDelete = useCallback(
     (payload: KeyboardEvent) => {
@@ -214,13 +218,19 @@ export default function LexicalImageComponent({
         style={{ width: `${currentWidth}px`, maxWidth: "100%" }}
       >
         <span className={theme.resizable.frame}>
-          <LazyImage
-            className={theme.media.image}
-            src={src}
-            altText={altText}
-            imageRef={imageRef}
-            width={currentWidth}
-          />
+          {canRenderImage ? (
+            <LazyImage
+              className={theme.media.image}
+              src={src}
+              altText={altText}
+              imageRef={imageRef}
+              width={currentWidth}
+            />
+          ) : (
+            <span className="text-sm text-muted-foreground">
+              {altText || src}
+            </span>
+          )}
         </span>
         {isSelected && isEditable && (
           <>
