@@ -5,11 +5,12 @@ import {
   DOMExportOutput,
   ElementFormatType,
   EditorConfig,
-  LexicalEditor,
   LexicalNode,
   NodeKey,
   SerializedLexicalNode,
   Spread,
+  createCommand,
+  type LexicalCommand,
 } from "lexical";
 import React from "react";
 import LexicalYouTubeComponent from "./LexicalYouTubeComponent";
@@ -22,6 +23,10 @@ export type SerializedYouTubeNode = Spread<
   },
   SerializedLexicalNode
 >;
+
+export const INSERT_YOUTUBE_COMMAND: LexicalCommand<string> = createCommand(
+  "INSERT_YOUTUBE_COMMAND"
+);
 
 export class YouTubeNode extends DecoratorNode<React.JSX.Element> {
   __videoID: string;

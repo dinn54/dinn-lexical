@@ -9,7 +9,26 @@ export { setupPrism } from "./server/setupPrism";
 export { theme } from "./core/theme";
 export { EditorNodes as nodes } from "./core/nodes";
 export { CUSTOM_TRANSFORMERS as transformers } from "./core/transformers";
-export { INSERT_IMAGE_COMMAND } from "./react/nodes/ImageNode";
+export {
+  $createImageNode,
+  $isImageNode,
+  INSERT_IMAGE_COMMAND,
+} from "./react/nodes/ImageNode";
+export {
+  $createTweetNode,
+  $isTweetNode,
+  INSERT_TWEET_COMMAND,
+} from "./react/nodes/TweetNode";
+export {
+  $createYouTubeNode,
+  $isYouTubeNode,
+  INSERT_YOUTUBE_COMMAND,
+} from "./react/nodes/YouTubeNode";
+export {
+  $createHorizontalRuleNode,
+  $isHorizontalRuleNode,
+  INSERT_HORIZONTAL_RULE_COMMAND,
+} from "./react/nodes/HorizontalRuleNode";
 export { isRenderableImageSrc } from "./core/imageSrc";
 
 export type { ImagePayload, SerializedImageNode } from "./react/nodes/ImageNode";

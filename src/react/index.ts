@@ -2,7 +2,26 @@ export { ClientReadOnlyLexicalViewer } from "./ClientReadOnlyLexicalViewer";
 export { Editor } from "./Editor";
 export { DetailLexicalViewer } from "./DetailLexicalViewer";
 export { ReadOnlyLexicalRenderer } from "./ReadOnlyLexicalRenderer";
-export { INSERT_IMAGE_COMMAND } from "./nodes/ImageNode";
+export {
+  $createImageNode,
+  $isImageNode,
+  INSERT_IMAGE_COMMAND,
+} from "./nodes/ImageNode";
+export {
+  $createTweetNode,
+  $isTweetNode,
+  INSERT_TWEET_COMMAND,
+} from "./nodes/TweetNode";
+export {
+  $createYouTubeNode,
+  $isYouTubeNode,
+  INSERT_YOUTUBE_COMMAND,
+} from "./nodes/YouTubeNode";
+export {
+  $createHorizontalRuleNode,
+  $isHorizontalRuleNode,
+  INSERT_HORIZONTAL_RULE_COMMAND,
+} from "./nodes/HorizontalRuleNode";
 export type { ImagePayload } from "./nodes/ImageNode";
 export type {
   ImageUploadContext,
