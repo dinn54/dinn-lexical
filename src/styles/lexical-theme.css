@@ -615,7 +615,7 @@
   background: var(--background, #ffffff);
   padding: 0.5rem;
   position: relative;
-  z-index: 100;
+  z-index: 10;
   flex-shrink: 0;
 }
 
