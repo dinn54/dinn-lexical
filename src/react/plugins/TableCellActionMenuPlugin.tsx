@@ -36,6 +36,10 @@ type ActiveCellState = {
 
 const DEFAULT_CELL_BG = "#ffffff";
 const DEFAULT_HEADER_BG = "#f8fafc";
+const MENU_CONTENT_WIDTH = 256;
+const MENU_TRIGGER_WIDTH = 28;
+const MENU_EDGE_PADDING = 8;
+type MenuPlacement = "left" | "right";
 
 function areSameCellKeys(left: string[], right: string[]): boolean {
   return (
@@ -349,11 +353,22 @@ export default function TableCellActionMenuPlugin() {
 
   const overlayRect = overlayElement.getBoundingClientRect();
   const menuTop = activeCell.rect.top - overlayRect.top + 4;
-  const menuLeft = activeCell.rect.right - overlayRect.left - 34;
+  const rawMenuLeft = activeCell.rect.right - overlayRect.left - MENU_TRIGGER_WIDTH - 6;
+  const menuLeft = Math.min(
+    Math.max(rawMenuLeft, MENU_EDGE_PADDING),
+    Math.max(MENU_EDGE_PADDING, overlayRect.width - MENU_TRIGGER_WIDTH - MENU_EDGE_PADDING),
+  );
+  const hasSpaceOnLeft =
+    menuLeft + MENU_TRIGGER_WIDTH - MENU_CONTENT_WIDTH >= MENU_EDGE_PADDING;
+  const hasSpaceOnRight =
+    menuLeft + MENU_CONTENT_WIDTH <= overlayRect.width - MENU_EDGE_PADDING;
+  const menuPlacement: MenuPlacement =
+    hasSpaceOnLeft || !hasSpaceOnRight ? "left" : "right";
 
   return createPortal(
     <div
       className="dinn-lexical-table-menu"
+      data-placement={menuPlacement}
       data-dinn-lexical-table-menu
       style={{ top: menuTop, left: menuLeft }}
     >

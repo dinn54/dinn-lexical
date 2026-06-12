@@ -751,6 +751,16 @@
   box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
 }
 
+.dinn-lexical-table-menu[data-placement="right"] .dinn-lexical-table-menu-content {
+  right: auto;
+  left: 0;
+}
+
+.dinn-lexical-table-menu[data-placement="left"] .dinn-lexical-table-menu-content {
+  right: 0;
+  left: auto;
+}
+
 .dinn-lexical-table-menu-content button {
   min-height: 1.875rem;
   border: 0;
