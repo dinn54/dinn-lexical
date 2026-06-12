@@ -1,7 +1,9 @@
 "use client";
 
 import type React from "react";
-import { useEffect, useRef } from "react";
+import { Tweet } from "react-tweet";
+import { createRoot, type Root } from "react-dom/client";
+import { Component, useEffect, useRef, useState } from "react";
 
 import { cn } from "../core/cx";
 import theme from "../core/theme";
@@ -20,6 +22,74 @@ interface DetailLexicalViewerClientProps {
 }
 
 const MIN_RESIZABLE_WIDTH = 100;
+
+class TweetEnhancementErrorBoundary extends Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error("Tweet enhancement failed:", error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null;
+    }
+
+    return this.props.children;
+  }
+}
+
+function EnhancedTweet({
+  tweetId,
+  onReady,
+}: {
+  tweetId: string;
+  onReady: () => void;
+}) {
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) {
+      return;
+    }
+
+    const markReadyIfTweetRendered = () => {
+      if (host.querySelector(".react-tweet-theme")) {
+        setIsReady(true);
+        onReady();
+      }
+    };
+
+    markReadyIfTweetRendered();
+
+    const observer = new MutationObserver(markReadyIfTweetRendered);
+    observer.observe(host, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [onReady]);
+
+  return (
+    <div
+      ref={hostRef}
+      aria-hidden={!isReady}
+      style={{ display: isReady ? "block" : "none" }}
+    >
+      {/* @ts-ignore react-tweet types lag the current React peer version. */}
+      <Tweet id={tweetId} />
+    </div>
+  );
+}
 
 function normalizeReadOnlyMediaWidths(container: HTMLElement) {
   const resizableNodes = Array.from(
@@ -72,6 +142,37 @@ export function DetailLexicalViewerClient({
 
     normalizeReadOnlyMediaWidths(container);
 
+    const roots = new Map<HTMLElement, Root>();
+    const tweetElements = Array.from(
+      container.querySelectorAll<HTMLElement>("[data-lexical-tweet-id]")
+    );
+
+    tweetElements.forEach((tweetElement) => {
+      const tweetId = tweetElement.dataset.lexicalTweetId;
+      if (!tweetId) {
+        return;
+      }
+
+      const host = document.createElement("div");
+      host.className = "editor-detail-tweet-enhancer";
+      host.style.width = tweetElement.style.width || "100%";
+      host.style.maxWidth = "100%";
+      tweetElement.insertAdjacentElement("afterend", host);
+
+      const root = createRoot(host);
+      roots.set(host, root);
+      root.render(
+        <TweetEnhancementErrorBoundary>
+          <EnhancedTweet
+            tweetId={tweetId}
+            onReady={() => {
+              tweetElement.style.display = "none";
+            }}
+          />
+        </TweetEnhancementErrorBoundary>
+      );
+    });
+
     const imageElements = Array.from(
       container.querySelectorAll<HTMLImageElement>(`.${theme.media.image}`)
     );
@@ -100,6 +201,10 @@ export function DetailLexicalViewerClient({
         cleanup();
       });
       resizeObserver?.disconnect();
+      roots.forEach((root, host) => {
+        root.unmount();
+        host.remove();
+      });
     };
   }, [fallbackHtml]);
 
