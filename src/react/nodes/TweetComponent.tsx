@@ -21,6 +21,31 @@ import { clampToContainerWidth, getResizeBoundaryWidth } from "./resizeBounds";
 import theme from "../../core/theme";
 import { AlignableBlock, MediaFrame, ResizableBlock } from "../ui/media-blocks";
 
+function TweetPlaceholder({ tweetID }: { tweetID: string }) {
+  return (
+    <div className={theme.media.tweetPlaceholder}>
+      <div className={theme.media.tweetPlaceholderBody}>
+        <div className={theme.media.tweetPlaceholderEyebrow}>Tweet</div>
+        <div className={theme.media.tweetPlaceholderText}>
+          Post {tweetID}
+        </div>
+        <a
+          className={theme.media.tweetPlaceholderLink}
+          href={`https://x.com/i/status/${tweetID}`}
+          target="_blank"
+          rel="noreferrer"
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          }}
+        >
+          https://x.com/i/status/{tweetID}
+        </a>
+      </div>
+    </div>
+  );
+}
+
 export default function TweetComponent({
   tweetID,
   format,
@@ -165,8 +190,12 @@ export default function TweetComponent({
         }}
       >
         <MediaFrame>
-          {/* @ts-ignore */}
-          <Tweet id={tweetID} />
+          {isEditable ? (
+            <TweetPlaceholder tweetID={tweetID} />
+          ) : (
+            // @ts-ignore react-tweet types lag the current React peer version.
+            <Tweet id={tweetID} />
+          )}
         </MediaFrame>
 
         {isSelected && isEditable && (
