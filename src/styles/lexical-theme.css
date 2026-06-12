@@ -605,3 +605,206 @@
 .token.namespace {
   color: #d6deeb;
 }
+
+.dinn-lexical-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  border-bottom: 1px solid hsl(var(--border, 214.3 31.8% 91.4%));
+  background: hsl(var(--background, 0 0% 100%));
+  padding: 0.5rem;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.dinn-lexical-toolbar button,
+.dinn-lexical-toolbar select {
+  min-height: 2rem;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  background: transparent;
+  color: hsl(var(--foreground, 222.2 84% 4.9%));
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.dinn-lexical-toolbar button {
+  min-width: 2rem;
+}
+
+.dinn-lexical-toolbar button:hover,
+.dinn-lexical-toolbar select:hover,
+.dinn-lexical-toolbar .is-active {
+  background: hsl(var(--accent, 210 40% 96.1%));
+}
+
+.dinn-lexical-toolbar button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.dinn-lexical-toolbar-separator {
+  width: 1px;
+  height: 1.5rem;
+  margin: 0 0.25rem;
+  background: hsl(var(--border, 214.3 31.8% 91.4%));
+}
+
+.dinn-lexical-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.32);
+  padding: 1rem;
+}
+
+.dinn-lexical-dialog {
+  width: min(28rem, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  border-radius: 0.75rem;
+  border: 1px solid hsl(var(--border, 214.3 31.8% 91.4%));
+  background: hsl(var(--background, 0 0% 100%));
+  color: hsl(var(--foreground, 222.2 84% 4.9%));
+  padding: 1rem;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+}
+
+.dinn-lexical-dialog h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.dinn-lexical-dialog label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.dinn-lexical-dialog input {
+  min-height: 2.25rem;
+  border-radius: 0.375rem;
+  border: 1px solid hsl(var(--border, 214.3 31.8% 91.4%));
+  background: transparent;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.dinn-lexical-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.dinn-lexical-checkbox-label {
+  flex-direction: row !important;
+  align-items: center;
+}
+
+.dinn-lexical-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.dinn-lexical-table-menu {
+  position: absolute;
+  z-index: 20;
+}
+
+.dinn-lexical-table-menu-trigger {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid hsl(var(--border, 214.3 31.8% 91.4%));
+  background: hsl(var(--background, 0 0% 100%));
+  color: hsl(var(--foreground, 222.2 84% 4.9%));
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.14);
+}
+
+.dinn-lexical-table-menu-content {
+  position: absolute;
+  right: 0;
+  top: 2rem;
+  display: flex;
+  width: 16rem;
+  flex-direction: column;
+  gap: 0.125rem;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--border, 214.3 31.8% 91.4%));
+  background: hsl(var(--background, 0 0% 100%));
+  padding: 0.375rem;
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.18);
+}
+
+.dinn-lexical-table-menu-content button {
+  min-height: 1.875rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: transparent;
+  padding: 0.375rem 0.5rem;
+  text-align: left;
+  font-size: 0.75rem;
+  color: hsl(var(--foreground, 222.2 84% 4.9%));
+}
+
+.dinn-lexical-table-menu-content button:hover,
+.dinn-lexical-table-menu-button.is-active {
+  background: hsl(var(--accent, 210 40% 96.1%));
+}
+
+.dinn-lexical-table-menu-content .is-danger {
+  color: #dc2626;
+}
+
+.dinn-lexical-table-menu-title,
+.dinn-lexical-table-menu-label {
+  color: hsl(var(--muted-foreground, 215.4 16.3% 46.9%));
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+}
+
+.dinn-lexical-table-menu-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.dinn-lexical-table-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem;
+  padding: 0 0.5rem 0.25rem;
+}
+
+.dinn-lexical-table-menu-separator {
+  height: 1px;
+  margin: 0.25rem 0;
+  background: hsl(var(--border, 214.3 31.8% 91.4%));
+}
+
+.dinn-lexical-color-swatch {
+  width: 1rem;
+  height: 1rem;
+  min-height: 1rem !important;
+  border-radius: 999px !important;
+  border: 1px solid hsl(var(--border, 214.3 31.8% 91.4%)) !important;
+  padding: 0 !important;
+}

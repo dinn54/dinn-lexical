@@ -34,6 +34,10 @@ import NormalizeMediaParagraphPlugin from "./plugins/NormalizeMediaParagraphPlug
 import NormalizeTableColumnWidthsPlugin from "./plugins/NormalizeTableColumnWidthsPlugin";
 import { ImageUploadPlugin } from "./plugins/ImageUploadPlugin";
 import { InsertImagePlugin } from "./plugins/InsertImagePlugin";
+import { InsertEmbedsPlugin } from "./plugins/InsertEmbedsPlugin";
+import TableCellActionMenuPlugin from "./plugins/TableCellActionMenuPlugin";
+import TableCellResizerPlugin from "./plugins/TableCellResizerPlugin";
+import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import type { ImageUploadHandler } from "./imageUpload";
 
 interface EditorProps {
@@ -47,8 +51,6 @@ interface EditorProps {
   className?: string;
   style?: React.CSSProperties;
   namespace?: string;
-  toolbar?: React.ReactNode;
-  editablePlugins?: React.ReactNode;
   onImageUpload?: ImageUploadHandler;
   onImageUploadError?: (error: unknown) => void;
 }
@@ -141,8 +143,6 @@ function EditorComponent({
   className,
   style,
   namespace = "DinnLexicalEditor",
-  toolbar,
-  editablePlugins,
   onImageUpload,
   onImageUploadError,
 }: EditorProps) {
@@ -175,7 +175,7 @@ function EditorComponent({
         )}
         style={style}
       >
-        {!readOnly && toolbar}
+        {!readOnly && <ToolbarPlugin canUploadImages={Boolean(onImageUpload)} />}
         <div className={cn(readOnly ? readOnlyRenderFrameClassName : "relative min-h-0 flex-1")}>
           <div
             data-editor-scroll-area
@@ -210,6 +210,7 @@ function EditorComponent({
           <CodeHighlightPlugin />
           <NormalizeMediaParagraphPlugin />
           {!readOnly && <InsertImagePlugin />}
+          {!readOnly && <InsertEmbedsPlugin />}
           {!readOnly && onImageUpload && (
             <ImageUploadPlugin
               onImageUpload={onImageUpload}
@@ -218,7 +219,8 @@ function EditorComponent({
           )}
           {readOnly && <NormalizeTableColumnWidthsPlugin />}
           <MarkdownShortcutPlugin transformers={CUSTOM_TRANSFORMERS} />
-          {!readOnly && editablePlugins}
+          {!readOnly && <TableCellActionMenuPlugin />}
+          {!readOnly && <TableCellResizerPlugin />}
           {onChange && (
             <OnChangePlugin
               onChange={(editorState) => {
