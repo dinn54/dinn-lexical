@@ -18,6 +18,7 @@ import { $isTweetNode } from "./TweetNode";
 import { clampToContainerWidth, getResizeBoundaryWidth } from "./resizeBounds";
 import theme from "../../core/theme";
 import { AlignableBlock, MediaFrame, ResizableBlock } from "../ui/media-blocks";
+import { SafeTweetEnhancement } from "./SafeTweetEnhancement";
 
 function TweetPlaceholder({ tweetID }: { tweetID: string }) {
   return (
@@ -59,10 +60,15 @@ export default function TweetComponent({
   const [isSelected, setSelected, clearSelection] =
     useLexicalNodeSelection(nodeKey);
   const [isResizing, setIsResizing] = useState(false);
+  const [isEnhanced, setIsEnhanced] = useState(false);
   const [boundaryWidth, setBoundaryWidth] = useState(550);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const isEditable = editor.isEditable();
+
+  useEffect(() => {
+    setIsEnhanced(false);
+  }, [tweetID]);
 
   const onDelete = useCallback(
     (payload: KeyboardEvent) => {
@@ -188,7 +194,16 @@ export default function TweetComponent({
         }}
       >
         <MediaFrame>
-          <TweetPlaceholder tweetID={tweetID} />
+          <div style={{ display: isEnhanced ? "none" : "block" }}>
+            <TweetPlaceholder tweetID={tweetID} />
+          </div>
+          <SafeTweetEnhancement
+            tweetId={tweetID}
+            onReady={() => {
+              setIsEnhanced(true);
+            }}
+            style={{ pointerEvents: isEditable ? "none" : "auto" }}
+          />
         </MediaFrame>
 
         {isSelected && isEditable && (
