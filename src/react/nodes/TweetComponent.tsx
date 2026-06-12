@@ -1,6 +1,4 @@
 "use client";
-
-import { Tweet } from "react-tweet";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useLexicalNodeSelection } from "@lexical/react/useLexicalNodeSelection";
 import { mergeRegister } from "@lexical/utils";
@@ -190,12 +188,7 @@ export default function TweetComponent({
         }}
       >
         <MediaFrame>
-          {isEditable ? (
-            <TweetPlaceholder tweetID={tweetID} />
-          ) : (
-            // @ts-ignore react-tweet types lag the current React peer version.
-            <Tweet id={tweetID} />
-          )}
+          <TweetPlaceholder tweetID={tweetID} />
         </MediaFrame>
 
         {isSelected && isEditable && (

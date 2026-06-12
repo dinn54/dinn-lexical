@@ -1,8 +1,6 @@
 "use client";
 
 import type React from "react";
-import { Tweet } from "react-tweet";
-import { createRoot, type Root } from "react-dom/client";
 import { useEffect, useRef } from "react";
 
 import { cn } from "../core/cx";
@@ -19,10 +17,6 @@ interface DetailLexicalViewerClientProps {
   fallbackHtml: string;
   className?: string;
   style?: React.CSSProperties;
-}
-
-function EnhancedTweet({ tweetId }: { tweetId: string }) {
-  return <Tweet id={tweetId} />;
 }
 
 const MIN_RESIZABLE_WIDTH = 100;
@@ -78,28 +72,6 @@ export function DetailLexicalViewerClient({
 
     normalizeReadOnlyMediaWidths(container);
 
-    const roots = new Map<HTMLElement, Root>();
-    const tweetElements = Array.from(
-      container.querySelectorAll<HTMLElement>("[data-lexical-tweet-id]")
-    );
-
-    tweetElements.forEach((tweetElement) => {
-      const tweetId = tweetElement.dataset.lexicalTweetId;
-      if (!tweetId) {
-        return;
-      }
-
-      const width = tweetElement.style.width;
-      tweetElement.className = "editor-detail-tweet-host";
-      tweetElement.replaceChildren();
-      tweetElement.style.width = width;
-      tweetElement.style.maxWidth = "100%";
-
-      const root = createRoot(tweetElement);
-      roots.set(tweetElement, root);
-      root.render(<EnhancedTweet tweetId={tweetId} />);
-    });
-
     const imageElements = Array.from(
       container.querySelectorAll<HTMLImageElement>(`.${theme.media.image}`)
     );
@@ -128,9 +100,6 @@ export function DetailLexicalViewerClient({
         cleanup();
       });
       resizeObserver?.disconnect();
-      roots.forEach((root) => {
-        root.unmount();
-      });
     };
   }, [fallbackHtml]);
 
